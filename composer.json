@@ -7,7 +7,8 @@
     "require": {
         "php": ">=5.5.9",
         "laravel/framework": "5.2.*",
-        "league/oauth2-client": "^1.4"
+        "league/oauth2-client": "^1.4",
+        "kozz/laravel-guzzle-provider": "^6.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
