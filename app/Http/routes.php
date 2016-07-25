@@ -17,52 +17,51 @@ Route::get('/', function () {
 
 Route::auth();
 
-$root = 'https://api.cc.ncu.edu.tw/oauth';
-$client = 'NjAwZjVlYWUtZmYxYi00ZDJjLTgwM2QtMTc3MTM5YWZmNzA0';
-$secret = 'b7c564bd9ac24ba229770f9584835a41af63438149f36cdc48f3a8ac1a027291047fdf18eba892bd86515b64a56c7ee2e1456e818f09dabacdd524f14a5ec1c1';
+Route::get('home', 'PortalController@redirect');
+Route::get('callback', 'PortalController@callback');
 
-Route::get('/home', function(){
+// Route::get('/home', function(){
+//
+//
+//     $root = 'https://api.cc.ncu.edu.tw/oauth';
+//     $client = 'NjAwZjVlYWUtZmYxYi00ZDJjLTgwM2QtMTc3MTM5YWZmNzA0';
+//
+//     $scope = 'user.info.basic.read';
+//     $url = $root . '/oauth/authorize?response_type=code&scope=' . $scope . '&client_id=' . $client;
+//
+//     return redirect($url);
+// });
 
-
-    $root = 'https://api.cc.ncu.edu.tw/oauth';
-    $client = 'NjAwZjVlYWUtZmYxYi00ZDJjLTgwM2QtMTc3MTM5YWZmNzA0';
-
-    $scope = 'user.info.basic.read';
-    $url = $root . '/oauth/authorize?response_type=code&scope=' . $scope . '&client_id=' . $client;
-
-    return redirect($url);
-});
-
-Route::get('/callback', function()
-{
-  $root = 'https://api.cc.ncu.edu.tw/oauth';
-  $client_id = 'NjAwZjVlYWUtZmYxYi00ZDJjLTgwM2QtMTc3MTM5YWZmNzA0';
-  $secret = 'b7c564bd9ac24ba229770f9584835a41af63438149f36cdc48f3a8ac1a027291047fdf18eba892bd86515b64a56c7ee2e1456e818f09dabacdd524f14a5ec1c1';
-
-    $url = $root . '/oauth/token';
-
-    $response = Guzzle::post(
-        $url,
-        [
-            'form_params' => [
-              'grant_type' => 'authorization_code',
-              'code' => $_GET['code'],
-              'client_id' => $client_id,
-              'client_secret' => $secret,
-            ]
-        ]
-    );
-    //echo $response->getBody();
-    // echo $response->getStatusCode(); // 200
-    // echo $response->getReasonPhrase(); // OK
-    // echo $response->getProtocolVersion(); // 1.1
-
-    $data = json_decode($response->getBody());
-    echo $data->{'access_token'};
-    session_start();
-    $_SESSION['a'] = $data->{'access_token'};
-    return redirect('/');
-});
+// Route::get('/callback', function()
+// {
+//   $root = 'https://api.cc.ncu.edu.tw/oauth';
+//   $client_id = 'NjAwZjVlYWUtZmYxYi00ZDJjLTgwM2QtMTc3MTM5YWZmNzA0';
+//   $secret = 'b7c564bd9ac24ba229770f9584835a41af63438149f36cdc48f3a8ac1a027291047fdf18eba892bd86515b64a56c7ee2e1456e818f09dabacdd524f14a5ec1c1';
+//
+//     $url = $root . '/oauth/token';
+//
+//     $response = Guzzle::post(
+//         $url,
+//         [
+//             'form_params' => [
+//               'grant_type' => 'authorization_code',
+//               'code' => $_GET['code'],
+//               'client_id' => $client_id,
+//               'client_secret' => $secret,
+//             ]
+//         ]
+//     );
+//     //echo $response->getBody();
+//     // echo $response->getStatusCode(); // 200
+//     // echo $response->getReasonPhrase(); // OK
+//     // echo $response->getProtocolVersion(); // 1.1
+//
+//     $data = json_decode($response->getBody());
+//     echo $data->{'access_token'};
+//     session_start();
+//     $_SESSION['a'] = $data->{'access_token'};
+//     return redirect('/');
+// });
 
 Route::get('/info', function(){
   $root = 'https://api.cc.ncu.edu.tw';
@@ -72,7 +71,7 @@ Route::get('/info', function(){
       $url,
       [
             'headers'  => [
-                'Authorization' => 'Bearer ' . $_SESSION['a']
+                'Authorization' => 'Bearer ' . session('access_token')
             ]
 
       ]
@@ -85,7 +84,6 @@ Route::get('/info', function(){
   echo $data->{'unit'};
 
 
-
-  $config = $this->app['config']['guzzle.portal'];
-  echo $config['client_id'] . ',' . $config['client_secret'];
+  //$config = $this->app['config']['portal'];
+  //echo $config['client_id'] . ',' . $config['client_secret'];
 });
